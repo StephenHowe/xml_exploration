@@ -1,0 +1,237 @@
+---
+title: "Exploring and Extracting Data from XML in R"
+author: "Stephen Howe"
+date: "5/18/2019"
+output: html_document
+---
+
+# Libraries
+
+You will need the following libraries installed and loaded for this analysis.
+
+```{r setup, include=FALSE}
+library(XML)
+library(dplyr)
+```
+
+# Data
+For this exploration of XML with R, I am going to use .xml files downloaded from Pubmed. Pubmed is a database of bibliographic citations of scientific articles published in the life sciences and medicine. It is maintained by the National Library of Medicine. You can learn more about this citations repository and download files [here](https://www.ncbi.nlm.nih.gov/pubmed/).
+
+To begin, let us load some data. There are three files that we will use. The first file is a single article citation for an article written on Kaposi's Sarcoma. This file will be used to explore an xml file that contains a sigle record. The second file is another single article citation for an article written about POEMS syndrome. We will use this second file for when we want to execute the same code across multiple, single record files. The third file is an xml file containing ~600 article citations for articles written about Castleman Disease. This file will be useful for when we want to execute code across multiple records stored in one file.
+
+Using the `xmlParse` function we can read the xml file into a variable.
+
+```{r data}
+xml_1 <- xmlParse('kaposis_sarcoma.xml')
+xml_2 <- xmlParse('poems_syndrome.xml')
+xml_3 <- xmlParse('pubmed_results.xml')
+```
+
+With the xml files parsed, we can now begin to explore the xml files with R. We will begin with the single record files. The following are some basic commands that will allow you to navigate the xml file.
+
+```{r navigate}
+class(xml_1)  # provides the class of the parsed file
+```
+
+# Exploring XML Files
+
+xml files are constructed from a hierarchy of parent and child nodes. If we identify the root node of the xml, we can view the entire xml file or use the root to navigate our way through the hierarchy. Let's begin by looking at the entire xml file.
+
+```{r}
+xmlRoot(xml_1)
+```
+
+Next, let's use this root node to learn more about the xml file. Running the code below tells us the that the root node is named 'PubmedArticleSet' and it has one child node named 'PubmedArticle'.
+
+```{r}
+#looking at the data
+xmltop = xmlRoot(xml_1) #gives content of root
+xmlName(xmltop) #give name of node, PubmedArticleSet
+xmlSize(xmltop) #how many children in node, 19
+xmlName(xmltop[[1]]) #name of root's children
+```
+
+Compare these results to our file containing multiple citation records in one file. The nodes are named the same and we can see that this one file has 655 article citations.
+
+```{r}
+#looking at the data
+xmltop3 = xmlRoot(xml_3) #gives content of root
+xmlName(xmltop3) #give name of node, PubmedArticleSet
+xmlSize(xmltop3) #how many children in node, 19
+xmlName(xmltop3[[1]]) #name of root's children
+```
+
+If you notice the last line of code we ran, we have referenced an index number: `[[1]]`. In this line of code, we are using the `xmlName` function to get the name of this node. We can also use these index numbers to view the xml content at that index value. For example, here is the xml for the first child--the first article citation--of our multi-record xml file.
+
+```{r}
+xmltop3[[1]]
+```
+
+And here is the 13th child node--the 13th article citation--in our multi-record file.
+
+```{r}
+xmltop3[[13]]
+```
+
+If you are wondering whether you can use index numbers to navigate through the xml hierarchy, you can. Using the `xmlName` function, we can get the name of the node at different parts of the xml.
+
+```{r}
+xmlName(xmltop[[1]])
+xmlName(xmltop[[1]][[1]])
+xmlName(xmltop[[1]][[1]][[1]])
+```
+
+Using the index values is useful, but is not always easy to read. You can also use node names to walk the hierarchy. For example, here is how we can get to the node with the article's title.
+
+```{r}
+xmlName(xmltop[['PubmedArticle']][['MedlineCitation']][['Article']][['ArticleTitle']])
+```
+
+Dropping the `xmlValue` function, we can view the actual content at this node.
+
+```{r}
+xmltop[[1]][[1]][[1]] #view PMID
+xmltop[['PubmedArticle']][['MedlineCitation']][['Article']][['ArticleTitle']] # view article title
+```
+
+# Extracting XML Content for Analysis
+
+So far we have looked at how we can read an XML file into a variable, get the root node for that XML, navigate the child nodes through index values or node names, and view the content at a specific node. If you look closely at the last lines of code we ran, we can see the content at a particular node but we are also seeing the xml tags. This is great for looking at our data, but if we want to analyze our data presumably we don't want the tags. Fortunately, there is another function to extract just the value at a given node: `xmlValue`. We will work with this function in order to get the content we want.
+
+Let's start simple. How can I get the article title for a single-record file?
+
+```{r}
+xmlValue(xmltop[['PubmedArticle']][['MedlineCitation']][['Article']][['ArticleTitle']])
+```
+
+How about the PMID?
+
+```{r}
+xmlValue(xmltop[[1]][[1]][[1]])
+```
+
+How about the PMID for the 13th article in the multi-record file?
+
+```{r}
+xmlValue(xmltop3[[13]][[1]][[1]])
+```
+
+Pretty cool, but writing out all the node names or indices is a bit cumbersome. Fortunately, there are other ways to navigate XML that has nothing to do with R but with XML itself: XPaths. XPath is a syntax describing a navigation path through XML elements. It looks very similar to a filepath. For example, we can navigate to the PMID element with this path: `/PubmedArticleSet/PubmedArticle/MedlineCitation/PMID`. R provides a function, `xpathSApply`, that lets us use XPaths to navigate directly to a specific path and then apply a function to that node.
+
+```{r}
+xpathSApply(xml_1, '/PubmedArticleSet/PubmedArticle/MedlineCitation/PMID', xmlValue)
+```
+
+We can also use an abbreviated XPath to go directly to the PMID node:
+
+```{r}
+xpathSApply(xmltop, '//PMID', xmlValue)
+```
+
+This is very useful for when you want to extract all the occurences of a single element from an XML file. We can use the same syntax as above to get all of the PMIDs from our multi-record file. Since the output of xpathSApply is a list, I will add an additional element to convert the restuls to a dataframe.
+
+```{r}
+pmids <- as.data.frame(xpathSApply(xmltop3, '//PMID', xmlValue))
+head(pmids)
+```
+
+Notice that xpathSApply will also work directly on our parsed xml, `xml_1`.
+
+```{r}
+pmids <- as.data.frame(xpathSApply(xml_3, '//PMID', xmlValue))
+head(pmids)
+nrow(pmids)
+```
+
+Notice the number of PMIDs (693) is greater than the number of artilces (655). PMIDs are unqiue to an article so the element, `//PMID` must be used in multiple places in the XML (for example, in a citations section). One way to avoid getting values for elements that are used in multiple places is to provide the full XPath:
+
+```{r}
+pmids2 <- as.data.frame(xpathSApply(xml_3, '/PubmedArticleSet/PubmedArticle/MedlineCitation/PMID', xmlValue))
+head(pmids2)
+nrow(pmids2)
+```
+
+Now we can extract the value of a all occurences of a node in a single-record file and in a multi-record file. How about getting the PMIDs from multiple, single-record files?
+
+```{r}
+# create list of file names
+mylist <- as.list(c('kaposis_sarcoma.xml', 'poems_syndrome.xml'))
+
+# function to parse each file and extract PMID value
+get_pmids <- function(x){
+  xml_data <- xmlParse(x)
+  pmid <- xpathSApply(xml_data, '//PMID', xmlValue)
+  pmid
+}
+
+# apply the function to a single file
+get_pmids('kaposis_sarcoma.xml')
+
+# apply the function to a list of files
+data_list <- lapply(mylist, get_pmids)
+
+# comine the results and convert to a dataframe
+pmid_all <- as.data.frame(do.call("rbind", data_list), stringsAsFactors = FALSE)
+pmid_all
+```
+
+What if you set of files is too long to type or copy all the filenames? There is a command for that too. In the next code chunck we use a base R function to get a list of files in the working directory that match the pattern xml. The rest of the code is the same as above. This won't work for a combination of single-record files and multi-record files. But it is a good approach when you have 100s of single-record files all in one directory.
+
+```{r}
+mylist2 <- list.files(pattern = '.xml')
+mylist2
+```
+
+# Conditional XPaths
+
+We can get more exacting with how we navigate through the XML in order to get the data we want. For example, what if we wanted to get the abstract for a specific PMID in our mutli-record file? We can put that condition right in the XPath. In the code below were are asking for the xml value of the abstrct for the XPath where the PMID element is equal to 31012139.
+
+```{r}
+xpathSApply(xml_3,
+            '//PubmedArticle/MedlineCitation[PMID=31012139]/Article/Abstract',
+            xmlValue)
+```
+
+The above example works because `Abstract` is underneath the same parent node, `MedlineCitation`. But what if the node upon which you want to base your condition is underneath a different parent than the node for which you want the value? Just put more of the XPath inside the brackets. For example, in the following code I get the list of identification numbers for PMID 31059555.
+
+```{r}
+xpathSApply(xml_3,
+            '//PubmedArticle[MedlineCitation/PMID=31059555]/PubmedData/ArticleIdList/ArticleId',
+            xmlValue)
+```
+
+Finally, if we want to look for a value where a particular *attribute* is equal to some value, we can use similar syntax. This time I will extract the DOI value for PMID 31059555.
+
+```{r}
+xpathSApply(xml_3,
+            '//PubmedArticle[MedlineCitation/PMID=31059555]/PubmedData/ArticleIdList/ArticleId[@IdType="doi"]',
+            xmlValue)
+```
+
+# Extracting Multiple Elements at a Time
+
+Everything we have done above extracts the value of a single element. We did this for a single file, we did this for files with multiple records, we did this for multiple files, and we did this based on certain conditions. What if we want to extract multiple elements at the same time? For example, what if we want to build a dataframe that lists alls the PMIDs and all the authors for each PMID? XML doesn't make this particularly easy because not all elements are required (e.g. an article record might not have an author element) and some records might have repeating elements (e.g. an article might have multiple authors. Putting everything we stepped through above together, we can write a function to do just this. 
+
+```{r}
+#create a list of main article PMIDs
+pmid_list <- as.numeric(xpathSApply(xml_3, "//PubmedArticle/MedlineCitation/PMID", xmlValue))
+
+#function to extract PMID and Authors
+author_df <- function(pmid.value){
+  PMID <- xpathSApply(xml_3, paste('//PubmedArticle/MedlineCitation[PMID=',pmid.value,']/PMID'), xmlValue)
+  
+  if(length(xpathSApply(xml_3, paste('//PubmedArticle/MedlineCitation[PMID=',pmid.value,']/Article/AuthorList/Author'), xmlValue)) > 0){
+    author <- xpathSApply(xml_3, paste('//PubmedArticle/MedlineCitation[PMID=',pmid.value,']/Article/AuthorList/Author'), xmlValue)
+  }else{
+    author <- 'no author provided'
+  }
+  as.data.frame(cbind(PMID=PMID, author=author))
+} 
+
+#loop through this function with a list of PMIDs
+data.list <- lapply(pmid_list, author_df)
+authors <- as.data.frame(do.call("rbind", data.list), stringsAsFactors = FALSE)
+
+tail(authors)
+```
+
