@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2019//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_190101.dtd">
+<PubmedArticleSet>
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">31012139</PMID>
+        <DateRevised>
+            <Year>2019</Year>
+            <Month>04</Month>
+            <Day>23</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1096-8652</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2019</Year>
+                        <Month>Apr</Month>
+                        <Day>22</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>American journal of hematology</Title>
+                <ISOAbbreviation>Am. J. Hematol.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>POEMS Syndrome: update on diagnosis, risk-stratification, and management.</ArticleTitle>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1002/ajh.25495</ELocationID>
+            <Abstract>
+                <AbstractText Label="DISEASE OVERVIEW" NlmCategory="UNASSIGNED">POEMS syndrome is a paraneoplastic syndrome due to an underlying plasma cell neoplasm. The major criteria for the syndrome are polyradiculoneuropathy, clonal plasma cell disorder (PCD), sclerotic bone lesions, elevated vascular endothelial growth factor, and the presence of Castleman disease. Minor features include organomegaly, endocrinopathy, characteristic skin changes, papilledema, extravascular volume overload, and thrombocytosis. Diagnoses are often delayed because the syndrome is rare and can be mistaken for other neurologic disorders, most commonly chronic inflammatory demyelinating polyradiculoneuropathy. POEMS syndrome should be distinguished from the Castleman disease variant of POEMS syndrome, which has no clonal PCD and typically little to no peripheral neuropathy but has several of the minor diagnostic criteria for POEMS syndrome.</AbstractText>
+                <AbstractText Label="DIAGNOSIS" NlmCategory="METHODS">The diagnosis of POEMS syndrome is made with 3 of the major criteria, two of which must include polyradiculoneuropathy and clonal plasma cell disorder, and at least one of the minor criteria.</AbstractText>
+                <AbstractText Label="RISK STRATIFICATION" NlmCategory="UNASSIGNED">Because the pathogenesis of the syndrome is not well understood, risk stratification is limited to clinical phenotype rather than specific molecular markers. Risk factors include low serum albumin, age, pleural effusion, pulmonary hypertension, and reduced eGFR.</AbstractText>
+                <AbstractText Label="RISK-ADAPTED THERAPY" NlmCategory="UNASSIGNED">For those patients with a dominant sclerotic plasmacytoma, first line therapy is irradiation. Patients with diffuse sclerotic lesions or disseminated bone marrow involvement and for those who have progression of their disease 3 to 6 months after completing radiation therapy should receive systemic therapy. Corticosteroids are temporizing, but alkylators are the mainstay of treatment, either in the form of low dose conventional therapy or high dose with stem cell transplantation. Lenalidomide shows promise with manageable toxicity. Thalidomide and bortezomib also have activity, but their benefit needs to be weighed against their risk of exacerbating the peripheral neuropathy. Prompt recognition and institution of both supportive care measures and therapy directed against the plasma cell result in the best outcomes. This article is protected by copyright. All rights reserved.</AbstractText>
+                <CopyrightInformation>This article is protected by copyright. All rights reserved.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Dispenzieri</LastName>
+                    <ForeName>Angela</ForeName>
+                    <Initials>A</Initials>
+                    <Identifier Source="ORCID">https://orcid.org/0000-0001-8780-9512</Identifier>
+                    <AffiliationInfo>
+                        <Affiliation>Professor of Medicine and Laboratory Medicine, Mayo Clnic.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2019</Year>
+                <Month>04</Month>
+                <Day>22</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Am J Hematol</MedlineTA>
+            <NlmUniqueID>7610369</NlmUniqueID>
+            <ISSNLinking>0361-8609</ISSNLinking>
+        </MedlineJournalInfo>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2019</Year>
+                <Month>04</Month>
+                <Day>13</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2019</Year>
+                <Month>04</Month>
+                <Day>17</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2019</Year>
+                <Month>4</Month>
+                <Day>24</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2019</Year>
+                <Month>4</Month>
+                <Day>24</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2019</Year>
+                <Month>4</Month>
+                <Day>24</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">31012139</ArticleId>
+            <ArticleId IdType="doi">10.1002/ajh.25495</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+</PubmedArticleSet>
